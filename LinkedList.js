@@ -128,36 +128,19 @@ class LinkedList {
       this.append(value);
       return this.head;
     }
-    let pointer = this.head;
-    let count = 0;
-    while (count < index - 1) {
-      pointer = pointer.next;
-      count++;
-    }
-    let connect = pointer.next;
-    pointer.next = node;
-    pointer = pointer.next;
-    pointer.next = connect;
+    let prev = this.at(index - 1);
+    node.next = prev.next;
+    prev.next = node;
     return this.head;
   }
 
   removeAt(index) {
     if (!this.head) return null;
-    // if (!this.head.next) {
-    //   this.head = null;
-    //   return this.head;
-    // }
     if (index === 0) return (this.head = this.head.next);
     if (index > this.size() - 1) return this.head;
-    let pointer = this.head;
-    let count = 0;
-    while (count < index - 1) {
-      pointer = pointer.next;
-      count++;
-    }
-    let connect = pointer.next;
-    pointer.next = connect.next;
-    pointer = null;
+    let prev = this.at(index - 1);
+    let pointerToRemove = prev.next;
+    prev.next = pointerToRemove.next;
     return this.head;
   }
 }
