@@ -56,6 +56,7 @@ class LinkedList {
   }
 
   at(index) {
+    if (!this.head) return null;
     let pointer = this.head;
     for (let i = 0; i < index; i++) {
       pointer = pointer.next;
@@ -112,6 +113,53 @@ class LinkedList {
     //concat tail + null
     return `${str} (${pointer.value}) -> (null)`;
   }
+
+  // EXTRAS
+  insertAt(value, index) {
+    const node = new Node(value);
+    if (!this.head) return node;
+    // prepend if index < 0;
+    if (index === 0) {
+      this.prepend(value);
+      return this.head;
+    }
+    // append if index > size
+    if (index > this.size() - 1) {
+      this.append(value);
+      return this.head;
+    }
+    let pointer = this.head;
+    let count = 0;
+    while (count < index - 1) {
+      pointer = pointer.next;
+      count++;
+    }
+    let connect = pointer.next;
+    pointer.next = node;
+    pointer = pointer.next;
+    pointer.next = connect;
+    return this.head;
+  }
+
+  removeAt(index) {
+    if (!this.head) return null;
+    // if (!this.head.next) {
+    //   this.head = null;
+    //   return this.head;
+    // }
+    if (index === 0) return (this.head = this.head.next);
+    if (index > this.size() - 1) return this.head;
+    let pointer = this.head;
+    let count = 0;
+    while (count < index - 1) {
+      pointer = pointer.next;
+      count++;
+    }
+    let connect = pointer.next;
+    pointer.next = connect.next;
+    pointer = null;
+    return this.head;
+  }
 }
 
 const list = new LinkedList();
@@ -125,11 +173,7 @@ list.pop();
 // TESTS
 console.log(list.size()); // 2, since we popped 2 nodes
 
-console.log(list.getHead());
-/* Node {
-  value: 2,
-  next: Node { value: 1, next: Node { value: 3, next: [Node] } }
-} */
+console.log(list.getHead()); //Node { value: 2, next: Node { value: 1, next: null } }
 
 console.log(list.getTail()); // Node { value: 1, next: null }
 
@@ -140,3 +184,28 @@ console.log(list.contains(0)); // false, no Node with value = 0
 console.log(list.find(2)); // value 2 is at 1st Node => index 0;
 
 console.log(list.toString()); // (2) -> (1) -> (null)
+
+/* Current linked list:
+Node { value: 2, next: Node { value: 1, next: null } } */
+
+console.log(JSON.stringify(list.insertAt(3, 1))); // insert at valid index:
+// LinkedList: {"value":2,"next":{"value":3,"next":{"value":1,"next":null}}}
+
+console.log(JSON.stringify(list.insertAt(3, 5))); //insert at index > size => append new node
+// LinkedList: {"value":2,"next":{"value":3,"next":{"value":1,"next":{"value":3,"next":null}}}}
+
+console.log(JSON.stringify(list.insertAt(3, 0))); //insert at index 0 => prepend
+// LinkedList: {"value":3,"next":{"value":2,"next":{"value":3,"next":{"value":1,"next":{"value":3,"next":null}}}}}
+
+console.log(JSON.stringify(list.removeAt(5))); // remove node from invalid index;
+// returns same LinkedList as above since index is invalid
+
+console.log(JSON.stringify(list.removeAt(4))); // remove node from valid index;
+// LinkedList: {"value":3,"next":{"value":2,"next":{"value":3,"next":{"value":1,"next":null}}}}
+
+list.pop();
+list.pop();
+list.pop();
+list.pop();
+
+console.log(list.removeAt(0)); //remove a node from an empty node. returns null;
