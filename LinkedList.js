@@ -121,27 +121,30 @@ class LinkedList {
     // prepend if index < 0;
     if (index === 0) {
       this.prepend(value);
-      return this.head;
+      return this.toString();
     }
     // append if index > size
     if (index > this.size() - 1) {
       this.append(value);
-      return this.head;
+      return this.toString();
     }
     let prev = this.at(index - 1);
     node.next = prev.next;
     prev.next = node;
-    return this.head;
+    return this.toString();
   }
 
   removeAt(index) {
     if (!this.head) return null;
-    if (index === 0) return (this.head = this.head.next);
-    if (index > this.size() - 1) return this.head;
+    if (index === 0) {
+      this.head = this.head.next;
+      return this.toString();
+    }
+    if (index > this.size() - 1) return this.toString();
     let prev = this.at(index - 1);
     let pointerToRemove = prev.next;
     prev.next = pointerToRemove.next;
-    return this.head;
+    return this.toString();
   }
 }
 
@@ -168,23 +171,22 @@ console.log(list.find(2)); // value 2 is at 1st Node => index 0;
 
 console.log(list.toString()); // (2) -> (1) -> (null)
 
-/* Current linked list:
-Node { value: 2, next: Node { value: 1, next: null } } */
+// Current linked list: (2) -> (1) -> (null)
 
-console.log(JSON.stringify(list.insertAt(3, 1))); // insert at valid index:
-// LinkedList: {"value":2,"next":{"value":3,"next":{"value":1,"next":null}}}
+console.log(list.insertAt(3, 1)); // insert at valid index:
+// LinkedList: (2) -> (3) -> (1) -> (null)
 
-console.log(JSON.stringify(list.insertAt(3, 5))); //insert at index > size => append new node
-// LinkedList: {"value":2,"next":{"value":3,"next":{"value":1,"next":{"value":3,"next":null}}}}
+console.log(list.insertAt(3, 5)); //insert at index > size => append new node
+// LinkedList: (2) -> (3) -> (1) -> (3) -> (null)
 
-console.log(JSON.stringify(list.insertAt(3, 0))); //insert at index 0 => prepend
-// LinkedList: {"value":3,"next":{"value":2,"next":{"value":3,"next":{"value":1,"next":{"value":3,"next":null}}}}}
+console.log(list.insertAt(3, 0)); //insert at index 0 => prepend
+// LinkedList: (3) -> (2) -> (3) -> (1) -> (3) -> (null)
 
-console.log(JSON.stringify(list.removeAt(5))); // remove node from invalid index;
-// returns same LinkedList as above since index is invalid
+console.log(list.removeAt(5)); // remove node from invalid index;
+// returns same LinkedList.  (3) -> (2) -> (3) -> (1) -> (3) -> (null)
 
-console.log(JSON.stringify(list.removeAt(4))); // remove node from valid index;
-// LinkedList: {"value":3,"next":{"value":2,"next":{"value":3,"next":{"value":1,"next":null}}}}
+console.log(list.removeAt(4)); // remove node from valid index;
+// LinkedList: (3) -> (2) -> (3) -> (1) -> (null)
 
 list.pop();
 list.pop();
